@@ -24,6 +24,8 @@ const Dashboard = () => {
   const [search, setSearch] = useState('');
   const [filterAction, setFilterAction] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [startDate, setStartDate] = useState('');
+const [endDate, setEndDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -31,7 +33,7 @@ const Dashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => { fetchLogs(); fetchStats(); }, [currentPage, filterAction, filterStatus]);
+  useEffect(() => { fetchLogs(); fetchStats(); }, [currentPage, filterAction, filterStatus, startDate, endDate]);
 
   const fetchLogs = async () => {
     try {
@@ -39,6 +41,8 @@ const Dashboard = () => {
       const params = new URLSearchParams({ page: currentPage, limit: 10 });
       if (filterAction) params.append('action', filterAction);
       if (filterStatus) params.append('status', filterStatus);
+      if (startDate) params.append('startDate', startDate);
+if (endDate) params.append('endDate', endDate);
       const response = await API.get(`/audit-logs?${params}`);
       setLogs(response.data.logs);
       setTotalPages(response.data.pages);
@@ -850,39 +854,51 @@ const Dashboard = () => {
               </div>
             )}
 
-            {/* Filters */}
-            <div className="filters-row">
-              <select
-                className="filter-select"
-                value={filterAction}
-                onChange={e => { setFilterAction(e.target.value); setCurrentPage(1); }}
-              >
-                <option value="">All Actions</option>
-                <option value="LOGIN">LOGIN</option>
-                <option value="LOGOUT">LOGOUT</option>
-                <option value="CREATE">CREATE</option>
-                <option value="UPDATE">UPDATE</option>
-                <option value="DELETE">DELETE</option>
-                <option value="EXPORT">EXPORT</option>
-              </select>
-              <select
-                className="filter-select"
-                value={filterStatus}
-                onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }}
-              >
-                <option value="">All Statuses</option>
-                <option value="success">Success</option>
-                <option value="failure">Failure</option>
-              </select>
-              {(filterAction || filterStatus || search) && (
-                <button className="filter-clear" onClick={() => { setFilterAction(''); setFilterStatus(''); setSearch(''); }}>
-                  ✕ Clear filters
-                </button>
-              )}
-              <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-                {filteredLogs.length} result{filteredLogs.length !== 1 ? 's' : ''}
-              </div>
+           {/* Filters */}
+          <div className="filters-row">
+            <input
+              type="date"
+              className="filter-select"
+              value={startDate}
+              onChange={e => { setStartDate(e.target.value); setCurrentPage(1); }}
+            />
+            <input
+              type="date"
+              className="filter-select"
+              value={endDate}
+              onChange={e => { setEndDate(e.target.value); setCurrentPage(1); }}
+            />
+            <select
+              className="filter-select"
+              value={filterAction}
+              onChange={e => { setFilterAction(e.target.value); setCurrentPage(1); }}
+            >
+              <option value="">All Actions</option>
+              <option value="LOGIN">LOGIN</option>
+              <option value="LOGOUT">LOGOUT</option>
+              <option value="CREATE">CREATE</option>
+              <option value="UPDATE">UPDATE</option>
+              <option value="DELETE">DELETE</option>
+              <option value="EXPORT">EXPORT</option>
+            </select>
+            <select
+              className="filter-select"
+              value={filterStatus}
+              onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }}
+            >
+              <option value="">All Statuses</option>
+              <option value="success">Success</option>
+              <option value="failure">Failure</option>
+            </select>
+            {(filterAction || filterStatus || search || startDate || endDate) && (
+              <button className="filter-clear" onClick={() => { setFilterAction(''); setFilterStatus(''); setSearch(''); setStartDate(''); setEndDate(''); }}>
+                ✕ Clear filters
+              </button>
+            )}
+            <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+              {filteredLogs.length} result{filteredLogs.length !== 1 ? 's' : ''}
             </div>
+          </div>
 
             {/* Table */}
             <div className="table-section">
