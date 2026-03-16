@@ -26,11 +26,13 @@ const getAuditLogs = async (req, res) => {
       filter.status = req.query.status;
     }
     if (req.query.startDate && req.query.endDate) {
-      filter.createdAt = {
-        $gte: new Date(req.query.startDate),
-        $lte: new Date(req.query.endDate)
-      };
-    }
+  const end = new Date(req.query.endDate);
+  end.setHours(23, 59, 59, 999);
+  filter.createdAt = {
+    $gte: new Date(req.query.startDate),
+    $lte: end
+  };
+}
 
     const logs = await AuditLog.find(filter)
       .populate('userId', 'username email role')
