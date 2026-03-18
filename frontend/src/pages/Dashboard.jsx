@@ -17,6 +17,7 @@ const getActionStyle = (action) =>
   ACTION_COLORS[action] || { bg: 'rgba(201,168,76,0.1)', color: '#c9a84c', border: 'rgba(201,168,76,0.2)' };
 
 const Dashboard = () => {
+  const [selectedLog, setSelectedLog] = useState(null);
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,10 +26,9 @@ const Dashboard = () => {
   const [filterAction, setFilterAction] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
   const [startDate, setStartDate] = useState('');
-const [endDate, setEndDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const [endDate, setEndDate] = useState('');
       if (filterAction) params.append('action', filterAction);
       if (filterStatus) params.append('status', filterStatus);
       if (startDate) params.append('startDate', startDate);
-if (endDate) params.append('endDate', endDate);
+      if (endDate) params.append('endDate', endDate);
       const response = await API.get(`/audit-logs?${params}`);
       setLogs(response.data.logs);
       setTotalPages(response.data.pages);
@@ -724,6 +724,124 @@ if (endDate) params.append('endDate', endDate);
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal {
+  background: var(--navy-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 520px;
+  max-width: 90vw;
+  padding: 32px;
+  position: relative;
+  animation: slideUp 0.25s ease;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  color: var(--muted);
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover { background: rgba(248,113,113,0.15); color: var(--danger); }
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.modal-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-field.full {
+  grid-column: 1 / -1;
+}
+
+.modal-field-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.modal-field-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--border-soft);
+  padding-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-btn {
+  padding: 10px 24px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.modal-btn:hover { background: rgba(201,168,76,0.2); }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
       `}</style>
 
       <div className="dash-root">
@@ -854,51 +972,51 @@ if (endDate) params.append('endDate', endDate);
               </div>
             )}
 
-           {/* Filters */}
-          <div className="filters-row">
-            <input
-              type="date"
-              className="filter-select"
-              value={startDate}
-              onChange={e => { setStartDate(e.target.value); setCurrentPage(1); }}
-            />
-            <input
-              type="date"
-              className="filter-select"
-              value={endDate}
-              onChange={e => { setEndDate(e.target.value); setCurrentPage(1); }}
-            />
-            <select
-              className="filter-select"
-              value={filterAction}
-              onChange={e => { setFilterAction(e.target.value); setCurrentPage(1); }}
-            >
-              <option value="">All Actions</option>
-              <option value="LOGIN">LOGIN</option>
-              <option value="LOGOUT">LOGOUT</option>
-              <option value="CREATE">CREATE</option>
-              <option value="UPDATE">UPDATE</option>
-              <option value="DELETE">DELETE</option>
-              <option value="EXPORT">EXPORT</option>
-            </select>
-            <select
-              className="filter-select"
-              value={filterStatus}
-              onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }}
-            >
-              <option value="">All Statuses</option>
-              <option value="success">Success</option>
-              <option value="failure">Failure</option>
-            </select>
-            {(filterAction || filterStatus || search || startDate || endDate) && (
-              <button className="filter-clear" onClick={() => { setFilterAction(''); setFilterStatus(''); setSearch(''); setStartDate(''); setEndDate(''); }}>
-                ✕ Clear filters
-              </button>
-            )}
-            <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
-              {filteredLogs.length} result{filteredLogs.length !== 1 ? 's' : ''}
+            {/* Filters */}
+            <div className="filters-row">
+              <input
+                type="date"
+                className="filter-select"
+                value={startDate}
+                onChange={e => { setStartDate(e.target.value); setCurrentPage(1); }}
+              />
+              <input
+                type="date"
+                className="filter-select"
+                value={endDate}
+                onChange={e => { setEndDate(e.target.value); setCurrentPage(1); }}
+              />
+              <select
+                className="filter-select"
+                value={filterAction}
+                onChange={e => { setFilterAction(e.target.value); setCurrentPage(1); }}
+              >
+                <option value="">All Actions</option>
+                <option value="LOGIN">LOGIN</option>
+                <option value="LOGOUT">LOGOUT</option>
+                <option value="CREATE">CREATE</option>
+                <option value="UPDATE">UPDATE</option>
+                <option value="DELETE">DELETE</option>
+                <option value="EXPORT">EXPORT</option>
+              </select>
+              <select
+                className="filter-select"
+                value={filterStatus}
+                onChange={e => { setFilterStatus(e.target.value); setCurrentPage(1); }}
+              >
+                <option value="">All Statuses</option>
+                <option value="success">Success</option>
+                <option value="failure">Failure</option>
+              </select>
+              {(filterAction || filterStatus || search || startDate || endDate) && (
+                <button className="filter-clear" onClick={() => { setFilterAction(''); setFilterStatus(''); setSearch(''); setStartDate(''); setEndDate(''); }}>
+                  ✕ Clear filters
+                </button>
+              )}
+              <div style={{ marginLeft: 'auto', fontSize: 13, color: 'var(--muted)', display: 'flex', alignItems: 'center' }}>
+                {filteredLogs.length} result{filteredLogs.length !== 1 ? 's' : ''}
+              </div>
             </div>
-          </div>
 
             {/* Table */}
             <div className="table-section">
@@ -934,7 +1052,7 @@ if (endDate) params.append('endDate', endDate);
                     {filteredLogs.map(log => {
                       const actionStyle = getActionStyle(log.action);
                       return (
-                        <tr key={log._id}>
+                        <tr key={log._id} onClick={() => setSelectedLog(log)} style={{ cursor: 'pointer' }}>
                           <td style={{ color: 'var(--muted)', fontSize: 12, whiteSpace: 'nowrap' }}>
                             {new Date(log.createdAt).toLocaleString()}
                           </td>
@@ -995,6 +1113,81 @@ if (endDate) params.append('endDate', endDate);
           </div>
         </main>
       </div>
+      {/* Log Detail Modal */}
+      {selectedLog && (
+        <div className="modal-overlay" onClick={() => setSelectedLog(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedLog(null)}>✕</button>
+
+            <div className="modal-title">Log Details</div>
+            <div className="modal-subtitle">
+              {new Date(selectedLog.createdAt).toLocaleString()}
+            </div>
+
+            <div className="modal-grid">
+              <div className="modal-field">
+                <div className="modal-field-label">Username</div>
+                <div className="modal-field-value">{selectedLog.userId?.username || 'N/A'}</div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Email</div>
+                <div className="modal-field-value">{selectedLog.userId?.email || 'N/A'}</div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Role</div>
+                <div className="modal-field-value">{selectedLog.userId?.role || 'N/A'}</div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Action</div>
+                <div className="modal-field-value">
+                  <span className="action-badge" style={{
+                    background: getActionStyle(selectedLog.action).bg,
+                    color: getActionStyle(selectedLog.action).color,
+                    borderColor: getActionStyle(selectedLog.action).border,
+                  }}>
+                    {selectedLog.action}
+                  </span>
+                </div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Resource Type</div>
+                <div className="modal-field-value">{selectedLog.resourceType || 'N/A'}</div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Status</div>
+                <div className="modal-field-value">
+                  <div className="status-dot">
+                    <div className="dot" style={{ background: selectedLog.status === 'success' ? 'var(--success)' : 'var(--danger)' }} />
+                    <span style={{ color: selectedLog.status === 'success' ? 'var(--success)' : 'var(--danger)' }}>
+                      {selectedLog.status}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">IP Address</div>
+                <div className="modal-field-value"><span className="ip-cell">{selectedLog.ipAddress || 'N/A'}</span></div>
+              </div>
+              <div className="modal-field">
+                <div className="modal-field-label">Resource ID</div>
+                <div className="modal-field-value" style={{ fontSize: 12, wordBreak: 'break-all' }}>{selectedLog.resourceId || 'N/A'}</div>
+              </div>
+              <div className="modal-field full">
+                <div className="modal-field-label">Device / Browser</div>
+                <div className="modal-field-value" style={{ fontSize: 12, color: 'var(--muted)' }}>{selectedLog.userAgent || 'N/A'}</div>
+              </div>
+              <div className="modal-field full">
+                <div className="modal-field-label">Description</div>
+                <div className="modal-field-value">{selectedLog.description || 'N/A'}</div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="modal-btn" onClick={() => setSelectedLog(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
