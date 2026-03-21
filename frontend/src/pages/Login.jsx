@@ -54,6 +54,7 @@ const Login = () => {
 
         .login-root {
           min-height: 100vh;
+          width: 100vw;
           display: flex;
           background: var(--navy);
           font-family: 'DM Sans', sans-serif;
@@ -81,11 +82,11 @@ const Login = () => {
 
         /* left decorative panel */
         .login-left {
-          flex: 1;
+          flex: 1.15;
           display: flex;
           flex-direction: column;
           justify-content: center;
-          padding: 80px;
+          padding: clamp(44px, 5vw, 84px);
           position: relative;
           overflow: hidden;
         }
@@ -216,18 +217,26 @@ const Login = () => {
 
         /* right form panel */
         .login-right {
-          width: 480px;
+          width: min(560px, 44vw);
+          min-width: 440px;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 60px 56px;
+          padding: 36px clamp(28px, 2.8vw, 56px);
           background: rgba(17, 34, 64, 0.6);
           backdrop-filter: blur(20px);
           position: relative;
+          border-left: 1px solid var(--border);
         }
 
         .form-container {
           width: 100%;
+          max-width: 420px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 18px;
+          padding: clamp(24px, 2.2vw, 34px);
+          box-shadow: 0 26px 56px rgba(3, 10, 24, 0.55);
           animation: fadeInUp 0.8s ease 0.2s both;
         }
 
@@ -252,12 +261,12 @@ const Login = () => {
         .form-subtitle {
           font-size: 14px;
           color: var(--muted);
-          margin-bottom: 40px;
+          margin-bottom: 30px;
           font-weight: 300;
         }
 
         .field-group {
-          margin-bottom: 20px;
+          margin-bottom: 16px;
           position: relative;
         }
 
@@ -276,7 +285,7 @@ const Login = () => {
 
         .field-input {
           width: 100%;
-          padding: 14px 18px;
+          padding: 15px 18px;
           background: rgba(255,255,255,0.04);
           border: 1px solid rgba(255,255,255,0.08);
           border-radius: 10px;
@@ -310,7 +319,7 @@ const Login = () => {
 
         .submit-btn {
           width: 100%;
-          padding: 15px;
+          padding: 16px;
           background: linear-gradient(135deg, var(--gold), var(--gold-light));
           border: none;
           border-radius: 10px;
@@ -342,7 +351,7 @@ const Login = () => {
 
         .form-footer {
           text-align: center;
-          margin-top: 28px;
+          margin-top: 22px;
           font-size: 12px;
           color: var(--muted);
         }
@@ -361,7 +370,16 @@ const Login = () => {
 
         @media (max-width: 900px) {
           .login-left { display: none; }
-          .login-right { width: 100%; }
+          .login-right {
+            width: 100%;
+            min-width: unset;
+            border-left: none;
+            padding: 24px;
+          }
+          .form-container {
+            max-width: 100%;
+            padding: 24px;
+          }
         }
       `}</style>
 

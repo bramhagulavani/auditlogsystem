@@ -120,6 +120,7 @@ const Dashboard = () => {
         .dash-root {
           display: flex;
           min-height: 100vh;
+          width: 100vw;
           background: var(--navy);
           position: relative;
         }
@@ -216,9 +217,10 @@ const Dashboard = () => {
         .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
 
         .nav-item.active {
-          background: rgba(201,168,76,0.08);
+          background: linear-gradient(90deg, rgba(201,168,76,0.22), rgba(201,168,76,0.08));
           border-color: var(--border);
           color: var(--gold);
+          box-shadow: inset 3px 0 0 var(--gold);
         }
 
         .nav-icon { font-size: 16px; width: 20px; text-align: center; }
@@ -276,6 +278,7 @@ const Dashboard = () => {
         /* ---- MAIN ---- */
         .main {
           margin-left: var(--sidebar-w);
+          width: calc(100vw - var(--sidebar-w));
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -355,21 +358,21 @@ const Dashboard = () => {
         .export-btn:hover { background: rgba(201,168,76,0.15); }
 
         /* content */
-        .content { padding: 32px; }
+        .content { padding: clamp(22px, 2.4vw, 36px); }
 
         /* stats cards */
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
-          margin-bottom: 28px;
+          gap: clamp(12px, 1.1vw, 18px);
+          margin-bottom: 30px;
         }
 
         .stat-card {
-          background: var(--navy-card);
+          background: linear-gradient(155deg, rgba(201,168,76,0.15), rgba(255,255,255,0.03) 38%, rgba(10,22,40,0.94));
           border: 1px solid var(--border-soft);
           border-radius: 14px;
-          padding: 22px 24px;
+          padding: 24px 24px;
           position: relative;
           overflow: hidden;
           transition: all 0.25s;
@@ -378,17 +381,28 @@ const Dashboard = () => {
 
         .stat-card:hover {
           border-color: var(--border);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          transform: translateY(-4px);
+          box-shadow: 0 16px 42px rgba(0,0,0,0.38);
         }
 
         .stat-card::before {
           content: '';
           position: absolute;
           top: 0; left: 0; right: 0;
-          height: 2px;
+          height: 3px;
           background: var(--card-accent, var(--gold));
-          opacity: 0.6;
+          opacity: 0.85;
+        }
+
+        .stat-card::after {
+          content: '';
+          position: absolute;
+          inset: -55% auto auto -25%;
+          width: 170px;
+          height: 170px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(201,168,76,0.22), transparent 70%);
+          pointer-events: none;
         }
 
         .stat-card:nth-child(1) { --card-accent: #c9a84c; animation-delay: 0.1s; }
@@ -405,7 +419,8 @@ const Dashboard = () => {
 
         .stat-icon {
           width: 40px; height: 40px;
-          background: rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.15);
           border-radius: 10px;
           display: flex; align-items: center; justify-content: center;
           font-size: 18px;
@@ -422,7 +437,7 @@ const Dashboard = () => {
 
         .stat-value {
           font-family: 'Playfair Display', serif;
-          font-size: 36px;
+          font-size: clamp(34px, 2.6vw, 44px);
           font-weight: 700;
           color: var(--white);
           line-height: 1;
@@ -444,6 +459,7 @@ const Dashboard = () => {
           padding: 24px;
           margin-bottom: 28px;
           animation: fadeInUp 0.5s ease 0.4s both;
+          box-shadow: 0 12px 36px rgba(0,0,0,0.2);
         }
 
         .section-header {
@@ -513,13 +529,14 @@ const Dashboard = () => {
         /* filters */
         .filters-row {
           display: flex;
+          flex-wrap: wrap;
           gap: 12px;
           margin-bottom: 20px;
           animation: fadeInUp 0.5s ease 0.5s both;
         }
 
         .filter-select {
-          padding: 8px 14px;
+          padding: 10px 14px;
           background: rgba(255,255,255,0.04);
           border: 1px solid var(--border-soft);
           border-radius: 8px;
@@ -555,6 +572,7 @@ const Dashboard = () => {
           border-radius: 14px;
           overflow: hidden;
           animation: fadeInUp 0.5s ease 0.6s both;
+          box-shadow: 0 16px 44px rgba(0,0,0,0.22);
         }
 
         .table-header {
@@ -595,10 +613,13 @@ const Dashboard = () => {
 
         tbody tr {
           border-bottom: 1px solid rgba(255,255,255,0.03);
-          transition: background 0.15s;
+          transition: background 0.2s, transform 0.2s;
         }
 
-        tbody tr:hover { background: rgba(255,255,255,0.02); }
+        tbody tr:hover {
+          background: linear-gradient(90deg, rgba(201,168,76,0.1), rgba(255,255,255,0.01));
+          transform: translateX(4px);
+        }
         tbody tr:last-child { border-bottom: none; }
 
         td {
@@ -612,8 +633,8 @@ const Dashboard = () => {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          padding: 4px 10px;
-          border-radius: 6px;
+          padding: 6px 12px;
+          border-radius: 999px;
           font-size: 11px;
           font-weight: 600;
           letter-spacing: 0.5px;
@@ -668,6 +689,7 @@ const Dashboard = () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-wrap: wrap;
           gap: 8px;
           padding: 20px;
           border-top: 1px solid var(--border-soft);
@@ -723,6 +745,35 @@ const Dashboard = () => {
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 1280px) {
+          .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 980px) {
+          :root { --sidebar-w: 90px; }
+          .logo-text, .logo-sub, .nav-label, .user-info { display: none; }
+          .sidebar-logo { justify-content: center; padding: 22px 10px; }
+          .sidebar-nav { padding: 18px 8px; }
+          .nav-item { justify-content: center; padding: 12px 8px; }
+          .nav-item { font-size: 0; }
+          .nav-icon { font-size: 18px; width: auto; }
+          .sidebar-user { justify-content: center; }
+          .content { padding: 20px; }
+          .topbar { padding: 0 20px; }
+          .search-box input { width: 150px; }
+        }
+
+        @media (max-width: 760px) {
+          .stats-grid { grid-template-columns: 1fr; }
+          .topbar { height: auto; min-height: 64px; flex-wrap: wrap; padding: 10px 14px; }
+          .topbar-title { width: 100%; }
+          .search-box { flex: 1; min-width: 0; }
+          .search-box input { width: 100%; min-width: 0; }
+          .filters-row > * { flex: 1 1 180px; }
+          .table-section { overflow-x: auto; }
+          table { min-width: 780px; }
         }
 
         /* Modal */

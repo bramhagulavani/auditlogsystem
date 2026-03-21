@@ -55,7 +55,7 @@ const Charts = () => {
         }
         body { background: var(--navy); color: var(--text); font-family: 'DM Sans', sans-serif; }
 
-        .charts-root { display: flex; min-height: 100vh; background: var(--navy); }
+        .charts-root { display: flex; min-height: 100vh; width: 100vw; background: var(--navy); }
         .charts-root::before {
           content: '';
           position: fixed; inset: 0;
@@ -97,7 +97,12 @@ const Charts = () => {
           margin-bottom: 2px; border: 1px solid transparent;
         }
         .nav-item:hover { background: rgba(255,255,255,0.04); color: var(--text); }
-        .nav-item.active { background: rgba(201,168,76,0.08); border-color: var(--border); color: var(--gold); }
+        .nav-item.active {
+          background: linear-gradient(90deg, rgba(201,168,76,0.22), rgba(201,168,76,0.08));
+          border-color: var(--border);
+          color: var(--gold);
+          box-shadow: inset 3px 0 0 var(--gold);
+        }
         .nav-icon { font-size: 16px; width: 20px; text-align: center; }
         .sidebar-user {
           padding: 16px; border-top: 1px solid var(--border-soft);
@@ -119,7 +124,13 @@ const Charts = () => {
         }
         .logout-btn:hover { color: #f87171; background: rgba(248,113,113,0.1); }
 
-        .main { margin-left: var(--sidebar-w); flex: 1; position: relative; z-index: 1; }
+        .main {
+          margin-left: var(--sidebar-w);
+          width: calc(100vw - var(--sidebar-w));
+          flex: 1;
+          position: relative;
+          z-index: 1;
+        }
         .topbar {
           height: 64px; border-bottom: 1px solid var(--border-soft);
           display: flex; align-items: center; padding: 0 32px; gap: 16px;
@@ -135,25 +146,27 @@ const Charts = () => {
           padding: 6px 14px; border-radius: 100px;
         }
 
-        .content { padding: 32px; }
+        .content { padding: clamp(20px, 2.4vw, 36px); }
 
        .charts-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: clamp(14px, 1.3vw, 22px);
         margin-bottom: 20px;
         max-width: 100%;
-        }
+       }
 
         .chart-card {
           background: var(--navy-card);
           border: 1px solid var(--border-soft);
           border-radius: 14px;
-          padding: 24px;
+          padding: clamp(18px, 1.9vw, 26px);
           animation: fadeInUp 0.5s ease both;
+          box-shadow: 0 14px 34px rgba(0,0,0,0.22);
         }
 
-        .chart-card.full { grid-column: 1 / -1; }
+        .chart-card.full { grid-column: span 12; }
+        .chart-card.half { grid-column: span 6; }
         .chart-card:nth-child(1) { animation-delay: 0.1s; }
         .chart-card:nth-child(2) { animation-delay: 0.2s; }
         .chart-card:nth-child(3) { animation-delay: 0.3s; }
@@ -161,11 +174,11 @@ const Charts = () => {
         .chart-card::before {
           content: '';
           display: block;
-          height: 2px;
+          height: 3px;
           background: var(--card-accent, var(--gold));
           border-radius: 2px;
-          margin-bottom: 20px;
-          opacity: 0.6;
+          margin-bottom: 18px;
+          opacity: 0.85;
         }
 
         .chart-card:nth-child(1) { --card-accent: #34d399; }
@@ -174,10 +187,10 @@ const Charts = () => {
 
         .chart-title {
           font-family: 'Playfair Display', serif;
-          font-size: 16px; font-weight: 600;
+          font-size: 18px; font-weight: 600;
           color: var(--white); margin-bottom: 4px;
         }
-        .chart-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+        .chart-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
 
         .custom-tooltip {
           background: var(--navy-card);
@@ -205,6 +218,23 @@ const Charts = () => {
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 980px) {
+          :root { --sidebar-w: 90px; }
+          .logo-text, .logo-sub, .nav-label, .sidebar-user > div[style] { display: none; }
+          .sidebar-logo { justify-content: center; padding: 22px 10px; }
+          .sidebar-nav { padding: 18px 8px; }
+          .nav-item { justify-content: center; font-size: 0; padding: 12px 8px; }
+          .nav-icon { font-size: 18px; width: auto; }
+          .sidebar-user { justify-content: center; }
+          .topbar { padding: 0 18px; }
+        }
+
+        @media (max-width: 860px) {
+          .chart-card.half { grid-column: span 12; }
+          .topbar { height: auto; min-height: 64px; padding: 12px 14px; flex-wrap: wrap; }
+          .topbar-title { width: 100%; }
         }
       `}</style>
 
@@ -281,7 +311,7 @@ const Charts = () => {
                 </div>
 
                 {/* Pie Chart — Action Breakdown */}
-                <div className="chart-card">
+                <div className="chart-card half">
                   <div className="chart-title">Action Breakdown</div>
                   <div className="chart-subtitle">Distribution of action types</div>
                   <ResponsiveContainer width="100%" height={320}>
@@ -311,7 +341,7 @@ const Charts = () => {
                 </div>
 
                 {/* Bar Chart — Status Breakdown */}
-                <div className="chart-card">
+                <div className="chart-card half">
                   <div className="chart-title">Success vs Failure</div>
                   <div className="chart-subtitle">Log entries by status</div>
                   <ResponsiveContainer width="100%" height={320}>
