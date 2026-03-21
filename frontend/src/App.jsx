@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import Charts from './pages/Charts.jsx';
 
 // This is a protected route wrapper
 // If user is not logged in, redirect them to /login
@@ -27,6 +28,15 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/charts"
+            element={
+              <ProtectedRoute>
+                <Charts />
+              </ProtectedRoute>
+            }
+          />
+
           {/* If someone visits /, send them to dashboard */}
           <Route path="/" element={<Navigate to="/dashboard" />} />
         </Routes>

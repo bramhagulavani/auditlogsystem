@@ -867,7 +867,7 @@ const Dashboard = () => {
             <div className="nav-item" onClick={handleExport}>
               <span className="nav-icon">⬇️</span> Export CSV
             </div>
-            <div className="nav-item">
+            <div className="nav-item" onClick={() => navigate('/charts')}>
               <span className="nav-icon">📈</span> Analytics
             </div>
             <div className="nav-label">System</div>
