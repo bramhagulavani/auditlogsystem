@@ -1,254 +1,206 @@
-<div align="center">
+# Audit Log System
 
-# 🛡️ Audit Log System
+Production-grade MERN audit logging platform with enterprise-focused UI and security-first architecture.
 
-### A production-grade security dashboard built with the MERN Stack
+## Overview
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+This project captures and visualizes user activity across the application lifecycle with searchable logs, analytics, and export capabilities.
 
-> **Every action. Tracked. Secured. Accountable.**  
-> A system that records every user action automatically — used in real companies like Stripe, GitHub, and Notion.
+Core goals:
+- Track every critical user action automatically
+- Provide secure access with JWT authentication and role controls
+- Offer operational visibility through a premium dashboard and charts
 
-</div>
+## Latest UI Upgrade (Completed)
 
----
+The frontend has been fully polished across all 3 React pages while preserving existing behavior.
 
-## 📸 Screenshots
+Updated pages:
+- `frontend/src/pages/Login.jsx`
+- `frontend/src/pages/Dashboard.jsx`
+- `frontend/src/pages/Charts.jsx`
 
-| Login Page | Dashboard |
-|---|---|
-| Premium navy/gold split layout with animated background | Full sidebar with stats, charts, filters and log table |
+What was improved:
+- Full-width content usage on Dashboard and Charts (no wasted right-side space)
+- Stronger, premium stat cards with subtle gradient backgrounds
+- Larger chart areas to remove squished visualizations
+- Better typography hierarchy using Playfair Display + DM Sans
+- Refined spacing and responsive layout behavior
+- Improved hover states for cards and table rows
+- Modern pill-style action badges
+- Enhanced sidebar active state treatment
+- Login panel rebalanced and visually centered for a premium feel
+- Smooth load animations across key UI sections
 
----
+Theme and behavior preserved:
+- Color palette remains Navy `#0a1628` and Gold `#c9a84c`
+- Existing app functionality remains intact:
+  - filters
+  - modal
+  - pagination
+  - charts
+  - export
+  - authentication and routing
 
-## ✨ Features
+## Tech Stack
 
-- 🔐 **JWT Authentication** — Secure login/logout with token-based auth
-- 👥 **Role-Based Access** — Admin, Auditor, and User roles
-- 📋 **Automatic Logging** — Every action is tracked without extra code
-- 📊 **Live Dashboard** — Stats cards, action breakdown with progress bars
-- 🔍 **Search & Filter** — Filter by action type, status, and user in real time
-- 📄 **Pagination** — Handles large datasets efficiently
-- ⬇️ **CSV Export** — Download all logs as a spreadsheet
-- 🎨 **Premium UI** — Professional navy/gold design built from scratch
+- Frontend: React + Vite
+- Styling: Custom CSS (inline page-level styles)
+- Charts: Recharts
+- Backend: Node.js + Express
+- Database: MongoDB + Mongoose
+- Auth: JWT + bcryptjs
+- API client: Axios
 
----
+## Feature Highlights
 
-## 🏗️ Project Structure
+- JWT authentication and secure session flow
+- Role-based access support (admin, auditor, user)
+- Automatic audit trail generation
+- Dashboard with stats, action breakdown, and interactive table
+- Analytics page with line, donut, and bar visualizations
+- Real-time search and filter workflows
+- CSV export support
+- Log detail modal and pagination for large datasets
 
-```
+## Project Structure
+
+```text
 auditlogsystem/
 ├── backend/
 │   ├── config/
-│   │   ├── db.js              # MongoDB connection
-│   │   └── index.js           # Environment config
+│   │   ├── db.js
+│   │   └── index.js
 │   ├── controllers/
-│   │   ├── authController.js  # Register, login, logout
-│   │   └── auditController.js # Get logs, stats, export
+│   │   ├── authController.js
+│   │   └── auditController.js
 │   ├── middleware/
-│   │   ├── auth.js            # JWT verification
-│   │   └── audit.js           # Auto-logging middleware
+│   │   ├── auth.js
+│   │   └── audit.js
 │   ├── models/
-│   │   ├── User.js            # User schema
-│   │   └── AuditLog.js        # Log entry schema
+│   │   ├── AuditLog.js
+│   │   └── User.js
 │   ├── routes/
-│   │   ├── authRoutes.js      # /api/auth/*
-│   │   └── auditRoutes.js     # /api/audit-logs/*
+│   │   ├── auditRoutes.js
+│   │   └── authRoutes.js
 │   ├── utils/
 │   │   ├── errorHandler.js
 │   │   └── logger.js
-│   ├── .env                   # Environment variables
-│   └── server.js              # Entry point
-└── frontend/
-    └── src/
-        ├── context/
-        │   └── AuthContext.jsx  # Global auth state
-        ├── pages/
-        │   ├── Login.jsx        # Login page
-        │   └── Dashboard.jsx    # Main dashboard
-        ├── services/
-        │   └── api.js           # Axios + auto JWT
-        └── App.jsx              # Routes
+│   ├── package.json
+│   └── server.js
+├── frontend/
+│   ├── src/
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   ├── pages/
+│   │   │   ├── Login.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── Charts.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   └── package.json
+├── package.json
+└── README.md
 ```
 
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js v14+
-- MongoDB Atlas account (free)
 
-### Installation
+- Node.js 14+
+- MongoDB Atlas (or local MongoDB)
 
-**1. Clone the repository**
+### 1) Clone and install
+
 ```bash
 git clone https://github.com/bramhagulavani/auditlogsystem.git
 cd auditlogsystem
 ```
 
-**2. Setup Backend**
+### 2) Backend setup
+
 ```bash
 cd backend
 npm install
 ```
 
-**3. Create your `.env` file inside `/backend`**
+Create `backend/.env`:
+
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_atlas_connection_string
+MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 JWT_EXPIRE=7d
 NODE_ENV=development
 ```
 
-**4. Start the backend**
+Run backend:
+
 ```bash
 npm run dev
 ```
 
-**5. Setup Frontend** (in a new terminal)
+### 3) Frontend setup
+
+In a new terminal:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-**6. Open your browser**
-```
+Open:
+
+```text
 http://localhost:5173
 ```
 
----
+## API Summary
 
-## 🔌 API Reference
+### Auth
 
-### Auth Endpoints
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login and return JWT
+- `GET /api/auth/me` - Get current user profile
+- `POST /api/auth/logout` - Logout and record event
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| POST | `/api/auth/register` | Create new account | No |
-| POST | `/api/auth/login` | Login and get JWT token | No |
-| GET | `/api/auth/me` | Get current user profile | Yes |
-| POST | `/api/auth/logout` | Logout and record event | Yes |
+### Audit Logs
 
-### Audit Log Endpoints
+- `GET /api/audit-logs` - Paginated logs with filters
+- `GET /api/audit-logs/stats` - Aggregated stats for dashboard/charts
+- `GET /api/audit-logs/export` - CSV export
+- `GET /api/audit-logs/user/:userId` - Logs by user
+- `GET /api/audit-logs/:id` - Single log details
 
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/api/audit-logs` | Get all logs with filters | Admin/Auditor |
-| GET | `/api/audit-logs/stats` | Get stats and analytics | Admin |
-| GET | `/api/audit-logs/export` | Download as CSV | Admin/Auditor |
-| GET | `/api/audit-logs/user/:userId` | Get logs by user | Admin/Auditor |
-| GET | `/api/audit-logs/:id` | Get single log entry | Admin/Auditor |
+Example query parameters for `GET /api/audit-logs`:
 
-### Query Parameters for GET `/api/audit-logs`
-
-```
+```text
 ?page=1&limit=10
-?action=LOGIN
-?status=success
-?userId=abc123
-?startDate=2026-01-01&endDate=2026-12-31
+action=LOGIN
+status=success
+startDate=2026-01-01&endDate=2026-12-31
 ```
 
----
+## Roles
 
-## 👥 User Roles
+- Admin: full access (logs, stats, export, management flows)
+- Auditor: read and export access
+- User: standard access with actions tracked
 
-| Role | Permissions |
-|------|-------------|
-| **Admin** | Full access — view, export, stats, manage users |
-| **Auditor** | View and export logs only |
-| **User** | Standard access — actions are tracked |
+## Tracked Actions
 
----
+- `CREATE`
+- `LOGIN`
+- `LOGOUT`
+- `UPDATE`
+- `DELETE`
+- `EXPORT`
+- `IMPORT`
 
-## 📝 Tracked Actions
+## Contributors
 
-| Action | Description |
-|--------|-------------|
-| `CREATE` | New resource created |
-| `LOGIN` | User logged in |
-| `LOGOUT` | User logged out |
-| `UPDATE` | Resource updated |
-| `DELETE` | Resource deleted |
-| `EXPORT` | Logs exported |
-| `IMPORT` | Data imported |
-
----
-
-## 🗄️ Database Schema
-
-### AuditLog
-```javascript
-{
-  userId:       ObjectId,   // Reference to User
-  action:       String,     // CREATE, LOGIN, LOGOUT...
-  resourceType: String,     // user, audit_log, report...
-  resourceId:   String,     // ID of affected resource
-  description:  String,     // Human readable description
-  ipAddress:    String,     // Client IP address
-  userAgent:    String,     // Browser/client info
-  status:       String,     // success | failure | warning
-  metadata:     Object,     // Any extra data
-  createdAt:    Date        // Auto timestamp
-}
-```
-
-### User
-```javascript
-{
-  username:  String,   // Unique username
-  email:     String,   // Unique email
-  password:  String,   // bcrypt hashed
-  role:      String,   // admin | user | auditor
-  isActive:  Boolean,  // Account status
-  createdAt: Date      // Auto timestamp
-}
-```
-
----
-
-## 🛠️ Tech Stack
-
-| Layer | Technology | Purpose |
-|-------|-----------|---------|
-| Frontend | React + Vite | UI framework |
-| Styling | Custom CSS | Premium navy/gold design |
-| HTTP Client | Axios | API calls with auto JWT |
-| Backend | Node.js + Express | REST API server |
-| Database | MongoDB Atlas | Cloud database |
-| ODM | Mongoose | Schema + validation |
-| Auth | JWT + bcryptjs | Secure authentication |
-| Dev Tool | Nodemon | Auto server restart |
-
----
-
-## 🌍 Real World Usage
-
-This pattern is used by:
-- 🏦 **Banks** — Track every transaction and account change
-- 🏥 **Hospitals** — Log who accessed patient records
-- 🛒 **E-commerce** — Record every order modification
-- 💻 **GitHub** — Track every push, merge, and permission change
-- 💳 **Stripe** — Log every payment event
-
----
-
-## 👨‍💻 Built By
-
-**Bramha Gulavani (Marco)** & **Tanmay**  
-MERN Stack Developers
-
----
-
-<div align="center">
-
-⭐ **Star this repo if you found it useful!**
-
-</div>
+- Bramha Gulavani (Marco)
+- Tanmay
