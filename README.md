@@ -1,67 +1,90 @@
 # Audit Log System
 
-Production-grade MERN audit logging platform with enterprise-focused UI and security-first architecture.
+A full-stack audit logging platform built with React, Vite, Node.js, Express, and MongoDB. It provides authenticated access to audit trails, operational stats, and CSV exports.
 
-## Overview
+## Current Project Snapshot
 
-This project captures and visualizes user activity across the application lifecycle with searchable logs, analytics, and export capabilities.
+This README is aligned with the current implementation in this repository.
 
-Core goals:
-- Track every critical user action automatically
-- Provide secure access with JWT authentication and role controls
-- Offer operational visibility through a premium dashboard and charts
-
-## Latest UI Upgrade (Completed)
-
-The frontend has been fully polished across all 3 React pages while preserving existing behavior.
-
-Updated pages:
-- `frontend/src/pages/Login.jsx`
-- `frontend/src/pages/Dashboard.jsx`
-- `frontend/src/pages/Charts.jsx`
-
-What was improved:
-- Full-width content usage on Dashboard and Charts (no wasted right-side space)
-- Stronger, premium stat cards with subtle gradient backgrounds
-- Larger chart areas to remove squished visualizations
-- Better typography hierarchy using Playfair Display + DM Sans
-- Refined spacing and responsive layout behavior
-- Improved hover states for cards and table rows
-- Modern pill-style action badges
-- Enhanced sidebar active state treatment
-- Login panel rebalanced and visually centered for a premium feel
-- Smooth load animations across key UI sections
-
-Theme and behavior preserved:
-- Color palette remains Navy `#0a1628` and Gold `#c9a84c`
-- Existing app functionality remains intact:
-  - filters
-  - modal
-  - pagination
-  - charts
-  - export
-  - authentication and routing
+Highlights:
+- JWT-based authentication with role-aware authorization
+- Audit log listing with pagination and filters
+- Stats and chart visualizations powered by Recharts
+- CSV export endpoint for audit data
+- Refined UI for login, dashboard, and analytics pages
 
 ## Tech Stack
 
-- Frontend: React + Vite
-- Styling: Custom CSS (inline page-level styles)
-- Charts: Recharts
-- Backend: Node.js + Express
-- Database: MongoDB + Mongoose
-- Auth: JWT + bcryptjs
-- API client: Axios
+- Frontend: React 19, Vite, React Router, Axios, Recharts
+- Backend: Node.js, Express, Mongoose
+- Security/Auth: JWT, bcryptjs, helmet, cors
+- Logging: morgan (development)
+- Database: MongoDB
 
-## Feature Highlights
+## Access Model
 
-- JWT authentication and secure session flow
-- Role-based access support (admin, auditor, user)
-- Automatic audit trail generation
-- Dashboard with stats, action breakdown, and interactive table
-- Analytics page with line, donut, and bar visualizations
-- Real-time search and filter workflows
-- CSV export support
-- Log detail modal and pagination for large datasets
+Supported roles in the user model:
+- `admin`
+- `auditor`
+- `user`
+
+Route access rules:
+- `admin`: full access to audit routes including stats
+- `auditor`: can read logs and export logs
+- `user`: cannot access audit routes, but user auth actions are still logged
+
+## Tracked Actions and Resource Types
+
+Audit action enum:
+- `CREATE`
+- `READ`
+- `UPDATE`
+- `DELETE`
+- `LOGIN`
+- `LOGOUT`
+- `EXPORT`
+- `IMPORT`
+
+Audit resource type enum:
+- `user`
+- `audit_log`
+- `report`
+- `system`
+- `config`
+
+## API Endpoints
+
+Base API URL: `http://localhost:5000/api`
+
+Health:
+- `GET /api/health`
+
+Auth:
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/auth/me` (protected)
+- `POST /api/auth/logout` (protected)
+
+Audit logs (all protected):
+- `GET /api/audit-logs` (`admin`, `auditor`)
+- `GET /api/audit-logs/stats` (`admin` only)
+- `GET /api/audit-logs/export` (`admin`, `auditor`)
+- `GET /api/audit-logs/user/:userId` (`admin`, `auditor`)
+- `GET /api/audit-logs/:id` (`admin`, `auditor`)
+
+Common query params:
+- List logs: `page`, `limit`, `userId`, `action`, `resourceType`, `status`, `startDate`, `endDate`
+- Export logs: `startDate`, `endDate`, `format` (`csv` or `json`, default is `json`)
+
+## Frontend Behavior
+
+- Routes:
+  - `/login`
+  - `/dashboard` (protected)
+  - `/charts` (protected)
+- Token and user are stored in `localStorage`
+- Axios client automatically attaches `Authorization: Bearer <token>`
+- Frontend API base URL is currently hardcoded to `http://localhost:5000/api`
 
 ## Project Structure
 
@@ -69,136 +92,84 @@ Theme and behavior preserved:
 auditlogsystem/
 ├── backend/
 │   ├── config/
-│   │   ├── db.js
-│   │   └── index.js
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   └── auditController.js
 │   ├── middleware/
-│   │   ├── auth.js
-│   │   └── audit.js
 │   ├── models/
-│   │   ├── AuditLog.js
-│   │   └── User.js
 │   ├── routes/
-│   │   ├── auditRoutes.js
-│   │   └── authRoutes.js
 │   ├── utils/
-│   │   ├── errorHandler.js
-│   │   └── logger.js
 │   ├── package.json
 │   └── server.js
 ├── frontend/
 │   ├── src/
 │   │   ├── context/
-│   │   │   └── AuthContext.jsx
 │   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── Charts.jsx
 │   │   ├── services/
-│   │   │   └── api.js
 │   │   ├── App.jsx
 │   │   └── main.jsx
-│   └── package.json
+│   ├── package.json
+│   └── vite.config.js
 ├── package.json
 └── README.md
 ```
 
-## Getting Started
+## Setup and Run
 
 ### Prerequisites
 
-- Node.js 14+
-- MongoDB Atlas (or local MongoDB)
+- Node.js 18+
+- MongoDB (local or Atlas)
 
-### 1) Clone and install
+### 1. Install dependencies
 
-```bash
-git clone https://github.com/bramhagulavani/auditlogsystem.git
-cd auditlogsystem
-```
-
-### 2) Backend setup
+Backend:
 
 ```bash
 cd backend
 npm install
 ```
 
-Create `backend/.env`:
-
-```env
-PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-JWT_EXPIRE=7d
-NODE_ENV=development
-```
-
-Run backend:
-
-```bash
-npm run dev
-```
-
-### 3) Frontend setup
-
-In a new terminal:
+Frontend (new terminal):
 
 ```bash
 cd frontend
 npm install
+```
+
+### 2. Configure backend environment
+
+Create `backend/.env` with:
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=replace_with_a_strong_secret
+JWT_EXPIRE=7d
+NODE_ENV=development
+```
+
+### 3. Start services
+
+Backend:
+
+```bash
+cd backend
 npm run dev
 ```
 
-Open:
+Frontend:
 
-```text
-http://localhost:5173
+```bash
+cd frontend
+npm run dev
 ```
 
-## API Summary
+Open `http://localhost:5173`.
 
-### Auth
+## Notes
 
-- `POST /api/auth/register` - Register user
-- `POST /api/auth/login` - Login and return JWT
-- `GET /api/auth/me` - Get current user profile
-- `POST /api/auth/logout` - Logout and record event
-
-### Audit Logs
-
-- `GET /api/audit-logs` - Paginated logs with filters
-- `GET /api/audit-logs/stats` - Aggregated stats for dashboard/charts
-- `GET /api/audit-logs/export` - CSV export
-- `GET /api/audit-logs/user/:userId` - Logs by user
-- `GET /api/audit-logs/:id` - Single log details
-
-Example query parameters for `GET /api/audit-logs`:
-
-```text
-?page=1&limit=10
-action=LOGIN
-status=success
-startDate=2026-01-01&endDate=2026-12-31
-```
-
-## Roles
-
-- Admin: full access (logs, stats, export, management flows)
-- Auditor: read and export access
-- User: standard access with actions tracked
-
-## Tracked Actions
-
-- `CREATE`
-- `LOGIN`
-- `LOGOUT`
-- `UPDATE`
-- `DELETE`
-- `EXPORT`
-- `IMPORT`
+- The stats endpoint is admin-only; non-admin users will receive authorization errors for that route.
+- CSV export endpoint records an `EXPORT` audit log entry.
+- A default root `package.json` exists, but active app development is split across `backend` and `frontend` packages.
 
 ## Contributors
 
